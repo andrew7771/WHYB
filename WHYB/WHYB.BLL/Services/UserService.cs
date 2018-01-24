@@ -26,11 +26,13 @@ namespace WHYB.BLL.Services
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
             ApplicationUser user = await Database.UserManager.FindByEmailAsync(userDto.Email);
+
             if (user == null)
             {
                 user = new ApplicationUser {Email = userDto.Email, UserName = userDto.Email};
 
                 var result = await Database.UserManager.CreateAsync(user, userDto.Password);
+
                 if (!result.Succeeded)
                 {
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
@@ -44,12 +46,8 @@ namespace WHYB.BLL.Services
 
                 return new OperationDetails(true, "Регистрация прошла успешно", "");
             }
-            else
-            {
-                {
-                    return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
-                }
-            }
+         
+             return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
         }
 
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
@@ -66,7 +64,7 @@ namespace WHYB.BLL.Services
             return claim;
         }
 
-        public async Task SetInitialData(UserDTO userDto, List<string> roles)
+        public async Task SetInitialData(UserDTO adminDto, List<string> roles)
         {
             foreach (string roleName in roles)
             {
@@ -77,7 +75,7 @@ namespace WHYB.BLL.Services
                     await Database.RoleManager.CreateAsync(role);
                 }
             }
-            await Create(userDto);
+            await Create(adminDto);
         }
 
         public void Dispose()

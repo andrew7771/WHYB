@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WHYB.DAL.Context;
 using WHYB.DAL.Entities;
@@ -14,48 +15,31 @@ namespace WHYB.DAL.Repositories
     public class IdentityUnitofWork : IUnitOfWork
     {
         private WhybDbContext _db;
-        private ApplicationRoleManager _roleManger;
+
+        private ApplicationRoleManager _roleManager;
         private ApplicationUserManager _userManager;
         private IClientManager _clientManager;
 
-        public ApplicationUserManager UserManager => _userManager;
-        public IClientManager ClientManager => _clientManager;
-        public ApplicationRoleManager RoleManager => _roleManger;
-
-        public IdentityUnitofWork(string connectionString)
+         public IdentityUnitofWork(string connectionString)
         {
             _db = new WhybDbContext(connectionString);
-            _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>());
-            _roleManger = new ApplicationRoleManager(new RoleStore<ApplicationRole>());
-            _clientManager = new ClientManager(_db);
         }
+
+        public ApplicationUserManager UserManager => _userManager ?? new ApplicationUserManager(new UserStore<ApplicationUser>(_db));
+
+        public IClientManager ClientManager => _clientManager ?? new ClientManager(_db);
+
+        public ApplicationRoleManager RoleManager => _roleManager ?? new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
+
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            _db.Dispose();
         }
-
-        private bool disposed = true;
-
-        public virtual void Dispose(bool disposing)
+        
+        public Task SaveAsync()
         {
-            if (!this.disposed)
-            {
-                if (disposed)
-                {
-                    _userManager.Dispose();
-                    _roleManger.Dispose();
-                    _clientManager.Dispose();
-                }
-                this.disposed = true;
-            }
-        }
-
-       
-        public async Task SaveAsync()
-        {
-            await _db.SaveChangesAsync();
+            return _db.SaveChangesAsync();
         }
     }
 }
