@@ -13,30 +13,49 @@ namespace WHYB.DAL.Repositories
 {
     public class IdentityUnitofWork : IUnitOfWork
     {
-        private WhybDbContext db;
+        private WhybDbContext _db;
         private ApplicationRoleManager _roleManger;
         private ApplicationUserManager _userManager;
         private IClientManager _clientManager;
 
+        public ApplicationUserManager UserManager => _userManager;
+        public IClientManager ClientManager => _clientManager;
+        public ApplicationRoleManager RoleManager => _roleManger;
+
         public IdentityUnitofWork(string connectionString)
         {
-            db = new WhybDbContext(connectionString);
+            _db = new WhybDbContext(connectionString);
             _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>());
             _roleManger = new ApplicationRoleManager(new RoleStore<ApplicationRole>());
-            _clientManager = new ClientManager(db);
+            _clientManager = new ClientManager(_db);
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public ApplicationUserManager UserManager { get; }
-        public IClientManager ClientManager { get; }
-        public ApplicationRoleManager RoleManager { get; }
-        public Task SaveAsync()
+        private bool disposed = true;
+
+        public virtual void Dispose(bool disposing)
         {
-            throw new NotImplementedException();
+            if (!this.disposed)
+            {
+                if (disposed)
+                {
+                    _userManager.Dispose();
+                    _roleManger.Dispose();
+                    _clientManager.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
+
+       
+        public async Task SaveAsync()
+        {
+            await _db.SaveChangesAsync();
         }
     }
 }

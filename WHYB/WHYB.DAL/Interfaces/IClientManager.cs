@@ -7,7 +7,7 @@ using WHYB.DAL.Entities;
 
 namespace WHYB.DAL.Interfaces
 {
-    public interface IClientManager
+    public interface IClientManager : IDisposable
     {
         void Create(ClientProfile clientProfile);
     }
