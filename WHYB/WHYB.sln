@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHYB.WEB", "WHYB.WEB\WHYB.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHYB.DAL", "WHYB.DAL\WHYB.DAL.csproj", "{F7788642-BE02-4FAF-B117-2F353C45EDEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHYB.BLL", "WHYB.BLL\WHYB.BLL.csproj", "{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F7788642-BE02-4FAF-B117-2F353C45EDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7788642-BE02-4FAF-B117-2F353C45EDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7788642-BE02-4FAF-B117-2F353C45EDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
