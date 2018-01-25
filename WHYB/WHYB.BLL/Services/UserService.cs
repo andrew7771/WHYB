@@ -39,9 +39,9 @@ namespace WHYB.BLL.Services
                 }
 
                 await Database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
-                ClientProfile clientProfile = new ClientProfile {Id = user.Id, Address = userDto.Address, Name = userDto.Name};
+                ClientProfile clientProfile = new ClientProfile {ClientProfileId = user.Id, Address = userDto.Address, Name = userDto.Name};
 
-                Database.ClientManager.Create(clientProfile);
+                Database.ClientProfileRepositoryManager.Create(clientProfile);
                 await Database.SaveAsync();
 
                 return new OperationDetails(true, "Регистрация прошла успешно", "");

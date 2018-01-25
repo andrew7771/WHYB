@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHYB.DAL", "WHYB.DAL\WHYB.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHYB.BLL", "WHYB.BLL\WHYB.BLL.csproj", "{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHYB.Infrastructure", "WHYB.Infrastructure\WHYB.Infrastructure.csproj", "{3B1DC506-D3B1-432A-9703-BC8A33C6A502}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E54EA8E-4427-41C2-A5BE-3C6B10E24F6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1DC506-D3B1-432A-9703-BC8A33C6A502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1DC506-D3B1-432A-9703-BC8A33C6A502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1DC506-D3B1-432A-9703-BC8A33C6A502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1DC506-D3B1-432A-9703-BC8A33C6A502}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

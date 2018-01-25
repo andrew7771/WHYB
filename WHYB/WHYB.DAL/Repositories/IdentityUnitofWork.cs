@@ -1,45 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
-using WHYB.DAL.Context;
 using WHYB.DAL.Entities;
 using WHYB.DAL.Identity;
 using WHYB.DAL.Interfaces;
 
 namespace WHYB.DAL.Repositories
 {
-    public class IdentityUnitofWork : IUnitOfWork
+    public class IdentityUnitOfWork : IUnitOfWork
     {
-        private WhybDbContext _db;
+        private readonly IdentityDbContext<ApplicationUser> _db;
+        private readonly IDbSetRepositoryManager<ClientProfile> _clientProfileRepositoryManager;
 
-        private ApplicationRoleManager _roleManager;
-        private ApplicationUserManager _userManager;
-        private IClientManager _clientManager;
+        private readonly ApplicationRoleManager _roleManager;
+        private readonly ApplicationUserManager _userManager;
 
-         public IdentityUnitofWork(string connectionString)
+        public IdentityUnitOfWork(string connectionString)
         {
-            _db = new WhybDbContext(connectionString);
+            _db = new IdentityDbContext<ApplicationUser>(connectionString);
         }
 
-        public ApplicationUserManager UserManager => _userManager ?? new ApplicationUserManager(new UserStore<ApplicationUser>(_db));
+        public ApplicationUserManager UserManager => _userManager ??
+                                                     new ApplicationUserManager(new UserStore<ApplicationUser>(_db));
 
-        public IClientManager ClientManager => _clientManager ?? new ClientManager(_db);
+        public ApplicationRoleManager RoleManager => _roleManager ??
+                                                     new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
 
-        public ApplicationRoleManager RoleManager => _roleManager ?? new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
+        public IDbSetRepositoryManager<ClientProfile> ClientProfileRepositoryManager =>
+            _clientProfileRepositoryManager ?? new DbSetRepositoryManager<ClientProfile>(_db);
 
-         
-        public void Dispose()
-        {
-            _db.Dispose();
-        }
-        
+
         public Task SaveAsync()
         {
             return _db.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }

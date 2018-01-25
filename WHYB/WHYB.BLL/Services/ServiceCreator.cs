@@ -13,7 +13,7 @@ namespace WHYB.BLL.Services
     {
         public IUserService CreateUserService(string connection)
         {
-            return new UserService(new IdentityUnitofWork(connection));
+            return new UserService(new IdentityUnitOfWork(connection));
         }
     }
 }

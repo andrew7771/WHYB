@@ -31,7 +31,6 @@ namespace WHYB.WEB.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
-        // GET: Account
         public ActionResult Login()
         {
             return View();
@@ -47,6 +46,7 @@ namespace WHYB.WEB.Controllers
             {
                 UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = await UserService.Authenticate(userDto);
+
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Неверный логин или пароль");
@@ -58,15 +58,18 @@ namespace WHYB.WEB.Controllers
                     {
                         IsPersistent = true
                     }, claim);
-                    RedirectToAction("Index", "Home");
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
+
             return View(model);
         }
 
         public ActionResult Logoff()
         {
             AuthenticationManager.SignOut();
+
             return RedirectToAction("Index", "Home");
         }
 
