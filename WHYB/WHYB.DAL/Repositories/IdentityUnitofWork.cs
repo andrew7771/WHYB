@@ -31,7 +31,7 @@ namespace WHYB.DAL.Repositories
 
         public ApplicationRoleManager RoleManager => _roleManager ?? new ApplicationRoleManager(new RoleStore<ApplicationRole>(_db));
 
-
+         
         public void Dispose()
         {
             _db.Dispose();
