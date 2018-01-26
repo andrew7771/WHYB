@@ -1,20 +1,22 @@
 ﻿using Autofac;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using WHYB.DAL.Context;
-using WHYB.DAL.Entities;
-using WHYB.DAL.Identity;
 using WHYB.DAL.Interfaces;
 using WHYB.DAL.Repositories;
 
 namespace WHYB.Infrastructure.AutofacModules
 {
-    public class UofModule : Module
+    public class UowModule : Module
     {
+        private readonly string _connectionString;
+
+        public UowModule(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<IdentityUnitOfWork>()
-                .As<IUnitOfWork>();
+                .As<IUnitOfWork>()
+                .WithParameter("connectionString", _connectionString);
 
             base.Load(builder);
         }

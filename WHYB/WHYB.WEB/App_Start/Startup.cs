@@ -14,7 +14,7 @@ namespace WHYB.App_Start
 {
     public class Startup
     {
-        IServiceCreator serviceCreator = new ServiceCreator();
+        private IServiceCreator _serviceCreator = new ServiceCreator();
 
         public void Configuration(IAppBuilder app)
         {
@@ -28,7 +28,7 @@ namespace WHYB.App_Start
 
         private IUserService CreateUserService()
         {
-            return serviceCreator.CreateUserService("WhybConnection");
+            return _serviceCreator.CreateUserService("WhybConnection");
         }
     }
 }

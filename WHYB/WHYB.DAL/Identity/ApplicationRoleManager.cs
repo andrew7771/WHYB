@@ -6,7 +6,7 @@ namespace WHYB.DAL.Identity
 {
     public class ApplicationRoleManager : RoleManager<ApplicationRole>
     {
-        public ApplicationRoleManager(RoleStore<ApplicationRole> store) : base(store)
+        public ApplicationRoleManager(IRoleStore<ApplicationRole> store) : base(store)
         {
         }
     }

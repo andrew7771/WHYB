@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacModules\DalModule.cs" />
+    <Compile Include="AutofacModules\ServicesModule.cs" />
+    <Compile Include="AutofacModules\UowModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

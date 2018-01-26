@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting;
-using System.Text;
-using System.Threading.Tasks;
-using WHYB.BLL.Interfaces;
-using WHYB.DAL.Repositories;
+﻿using WHYB.BLL.Interfaces;
 
 namespace WHYB.BLL.Services
 {
     public class ServiceCreator : IServiceCreator
     {
+        private readonly IUserService _userService;
+
+        public ServiceCreator() { }
+
+        public ServiceCreator(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         public IUserService CreateUserService(string connection)
         {
-            return new UserService(new IdentityUnitOfWork(connection));
+            return _userService;
         }
     }
 }
