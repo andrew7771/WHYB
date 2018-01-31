@@ -1,21 +1,27 @@
 ﻿using WHYB.BLL.Interfaces;
+using WHYB.DAL.Repositories;
 
 namespace WHYB.BLL.Services
 {
-    public class ServiceCreator : IServiceCreator
+    public class ServicesCreator /*: IServicesCreator*/
     {
-        private readonly IUserService _userService;
-
-        public ServiceCreator() { }
-
-        public ServiceCreator(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         public IUserService CreateUserService(string connection)
         {
-            return _userService;
+            return new UserService(new IdentityUnitOfWork(connection));
         }
+
+        //private readonly IUserService _userService;
+
+        //public ServicesCreator() { }
+
+        //public ServicesCreator(IUserService userService)
+        //{
+        //    _userService = userService;
+        //}
+
+        //public IUserService CreateUserService(string connection)
+        //{
+        //    return _userService;
+        //}
     }
 }

@@ -17,12 +17,15 @@ namespace WHYB.WEB.Infrastructure.Autofac
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterModule(new DalModule(connectionString));
-            builder.RegisterModule(new ServicesModule(connectionString));
             builder.RegisterModule(new UowModule(connectionString));
+            builder.RegisterModule(new UserServicesModule());
+            //builder.RegisterModule(new ServicesCreatorModule());
 
             var container = builder.Build();
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+
+            
         }
     }
 }

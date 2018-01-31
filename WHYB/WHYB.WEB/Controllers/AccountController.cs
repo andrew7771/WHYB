@@ -69,7 +69,6 @@ namespace WHYB.WEB.Controllers
         public ActionResult Logoff()
         {
             AuthenticationManager.SignOut();
-
             return RedirectToAction("Index", "Home");
         }
 

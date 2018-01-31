@@ -11,7 +11,7 @@ namespace WHYB.DAL.Repositories
     public class IdentityUnitOfWork : IUnitOfWork
     {
         private readonly IdentityDbContext<ApplicationUser> _db;
-        private readonly IDbSetRepositoryManager<ClientProfile> _clientProfileRepositoryManager;
+        private readonly IRepository<ClientProfile> _clientProfileRepository;
 
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,8 +21,8 @@ namespace WHYB.DAL.Repositories
             _db = new IdentityDbContext<ApplicationUser>(connectionString);
         }
         
-        public IDbSetRepositoryManager<ClientProfile> ClientProfileRepositoryManager =>
-            _clientProfileRepositoryManager ?? new DbSetRepositoryManager<ClientProfile>(_db);
+        public IRepository<ClientProfile> ClientProfileRepository =>
+            _clientProfileRepository ?? new Repository<ClientProfile>(_db);
 
         public UserManager<ApplicationUser> UserManager => _userManager ??
                                                         new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));

@@ -26,8 +26,8 @@ namespace WHYB.Infrastructure.AutofacModules
             builder.RegisterType<ApplicationUserManager>()
                 .As<UserManager<ApplicationUser>>();
 
-            builder.RegisterGeneric(typeof(DbSetRepositoryManager<>))
-                .As(typeof(IDbSetRepositoryManager<>));
+            builder.RegisterGeneric(typeof(Repository<>))
+                .As(typeof(IRepository<>));
 
             builder.RegisterType<WhybDbContext>()
                 .As<IdentityDbContext<ApplicationUser>>()

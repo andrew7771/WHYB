@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WHYB.BLL.Interfaces
 {
-    public interface IServiceCreator
+    public interface IServicesCreator
     {
         IUserService CreateUserService(string connection);
     }

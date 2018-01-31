@@ -38,7 +38,7 @@ namespace WHYB.BLL.Services
                 await _database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
                 ClientProfile clientProfile = new ClientProfile {Id = user.Id, Address = userDto.Address, Name = userDto.Name};
 
-                _database.ClientProfileRepositoryManager.Create(clientProfile);
+                _database.ClientProfileRepository.Create(clientProfile);
                 await _database.SaveAsync();
 
                 return new OperationDetails(true, "Регистрация прошла успешно", "");
@@ -74,7 +74,7 @@ namespace WHYB.BLL.Services
             }
             await Create(adminDto);
         }
-
+        
         
         public void Dispose()
         {
