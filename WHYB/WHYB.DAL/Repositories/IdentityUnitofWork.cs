@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WHYB.DAL.Entities;
-using WHYB.DAL.Identity;
 using WHYB.DAL.Interfaces;
 
 namespace WHYB.DAL.Repositories

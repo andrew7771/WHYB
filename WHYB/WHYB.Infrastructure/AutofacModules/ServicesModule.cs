@@ -1,14 +1,11 @@
 ﻿using Autofac;
 using WHYB.BLL.Interfaces;
 using WHYB.BLL.Services;
-using WHYB.DAL.Interfaces;
-using WHYB.DAL.Repositories;
 
 
 namespace WHYB.Infrastructure.AutofacModules
 {
-    public class ServicesModule : Module
-    {
+    public class ServicesModule : Module{
 
         protected override void Load(ContainerBuilder builder)
         {

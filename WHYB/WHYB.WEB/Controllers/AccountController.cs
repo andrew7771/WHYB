@@ -23,7 +23,7 @@ namespace WHYB.WEB.Controllers
             _userService = userService;
         }
 
-        private IUserService UserService => _userService;
+        //private IUserService UserService => _userService;
 
         private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
@@ -41,7 +41,7 @@ namespace WHYB.WEB.Controllers
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
-                ClaimsIdentity claim = await UserService.Authenticate(userDto);
+                ClaimsIdentity claim = await _userService.Authenticate(userDto);
 
                 if (claim == null)
                 {
@@ -89,7 +89,7 @@ namespace WHYB.WEB.Controllers
                     Name = model.Name,
                     Role = "user"
                 };
-                OperationDetails operationDetails = await UserService.Create(userDto);
+                OperationDetails operationDetails = await _userService.Create(userDto);
                 if (operationDetails.Succedeed)
                 {
                     return View("SuccessRegister");
@@ -105,7 +105,7 @@ namespace WHYB.WEB.Controllers
 
         private async Task SetInitialDataAsync()
         {
-            await UserService.SetInitialData(new UserDTO
+            await _userService.SetInitialData(new UserDTO
             {
                 Email = "somemail@mail.ru",
                 UserName = "somemail@mail.ru",

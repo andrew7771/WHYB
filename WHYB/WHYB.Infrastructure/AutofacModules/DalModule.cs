@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using WHYB.DAL.Context;
 using WHYB.DAL.Entities;
 using WHYB.DAL.Identity;
@@ -34,6 +35,11 @@ namespace WHYB.Infrastructure.AutofacModules
                 .As<UserManager<ApplicationUser>>()
                 .WithParameter("store", new UserStore<ApplicationUser>(new IdentityDbContext<ApplicationUser>()))
                 .InstancePerRequest();
+
+            builder.RegisterType<ApplicationSignInManager>()
+                .As<SignInManager<ApplicationUser, string>>()
+                .InstancePerRequest();
+
 
             builder.RegisterGeneric(typeof(Repository<>))
                 .As(typeof(IRepository<>));

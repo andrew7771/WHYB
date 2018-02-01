@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using WHYB.BLL.DTO;
 using WHYB.BLL.Infrastructure;
 using WHYB.BLL.Interfaces;
 using WHYB.DAL.Entities;
+using WHYB.DAL.Identity;
 using WHYB.DAL.Interfaces;
 
 namespace WHYB.BLL.Services
@@ -51,7 +53,6 @@ namespace WHYB.BLL.Services
 
             return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
         }
-
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
@@ -64,6 +65,16 @@ namespace WHYB.BLL.Services
                     await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             }
             return claim;
+        }
+
+
+        public static Type get()
+        {
+            return typeof(ApplicationUserManager);
+        }
+        public static Type get1()
+        {
+            return typeof(ApplicationUser);
         }
 
         public async Task SetInitialData(UserDTO adminDto, List<string> roles)
@@ -79,8 +90,6 @@ namespace WHYB.BLL.Services
             }
             await Create(adminDto);
         }
-
-
         public void Dispose()
         {
             _database.Dispose();
