@@ -9,9 +9,9 @@ namespace WHYB.DAL.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        UserManager<ApplicationUser> UserManager { get; }
-        RoleManager<ApplicationRole> RoleManager { get; }
-        IRepository<ClientProfile> ClientProfileRepository { get; }
+        //UserManager<ApplicationUser> UserManager { get; }
+        //RoleManager<ApplicationRole> RoleManager { get; }
+        //IRepository<ClientProfile> ClientProfileRepository { get; }
         Task SaveAsync();
     }
 }

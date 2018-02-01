@@ -16,21 +16,17 @@ namespace WHYB.WEB.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserService UserService
+        private readonly IUserService _userService;
+
+        public AccountController(IUserService userService)
         {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
+            _userService = userService;
         }
 
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IUserService UserService => _userService;
+
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
+
         public ActionResult Login()
         {
             return View();

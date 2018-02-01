@@ -14,49 +14,54 @@ namespace WHYB.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _database;
-
-        public UserService(IUnitOfWork uow)
+        private readonly IRepository<ClientProfile> _clientProfileRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        public UserService(IUnitOfWork uow, IRepository<ClientProfile> clientProfileRepository, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             _database = uow;
+            _clientProfileRepository = clientProfileRepository;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
-            ApplicationUser user = await _database.UserManager.FindByEmailAsync(userDto.Email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(userDto.Email);
 
             if (user == null)
             {
-                user = new ApplicationUser {Email = userDto.Email, UserName = userDto.Email};
+                user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
 
-                var result = await _database.UserManager.CreateAsync(user, userDto.Password);
+                var result = await _userManager.CreateAsync(user, userDto.Password);
 
                 if (!result.Succeeded)
                 {
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 }
 
-                await _database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
-                ClientProfile clientProfile = new ClientProfile {Id = user.Id, Address = userDto.Address, Name = userDto.Name};
+                await _userManager.AddToRoleAsync(user.Id, userDto.Role);
+                ClientProfile clientProfile = new ClientProfile { Id = user.Id, Address = userDto.Address, Name = userDto.Name };
 
-                _database.ClientProfileRepository.Create(clientProfile);
+                _clientProfileRepository.Create(clientProfile);
                 await _database.SaveAsync();
 
                 return new OperationDetails(true, "Регистрация прошла успешно", "");
             }
-         
-             return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
+
+            return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
         }
 
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
 
-            ApplicationUser user = await _database.UserManager.FindAsync(userDto.Email, userDto.Password);
+            ApplicationUser user = await _userManager.FindAsync(userDto.Email, userDto.Password);
 
             if (user != null)
             {
                 claim =
-                    await _database.UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                    await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             }
             return claim;
         }
@@ -65,17 +70,17 @@ namespace WHYB.BLL.Services
         {
             foreach (string roleName in roles)
             {
-                var role = await _database.RoleManager.FindByNameAsync(roleName);
+                var role = await _roleManager.FindByNameAsync(roleName);
                 if (role == null)
                 {
-                    role = new ApplicationRole {Name = roleName};
-                    await _database.RoleManager.CreateAsync(role);
+                    role = new ApplicationRole { Name = roleName };
+                    await _roleManager.CreateAsync(role);
                 }
             }
             await Create(adminDto);
         }
-        
-        
+
+
         public void Dispose()
         {
             _database.Dispose();

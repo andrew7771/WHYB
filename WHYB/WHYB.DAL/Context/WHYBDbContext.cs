@@ -7,13 +7,10 @@ namespace WHYB.DAL.Context
 {
     public class WhybDbContext : IdentityDbContext<ApplicationUser>
     {
-        static WhybDbContext()
+        public WhybDbContext(string connectionString)
+            : base(connectionString)
         {
             Database.SetInitializer(new WhybDBInitializer());
-        }
-
-        public WhybDbContext(string connectionString) : base(connectionString)
-        {
         }
 
         public DbSet<ClientProfile> ClientProfiles { get; set; }

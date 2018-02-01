@@ -7,7 +7,7 @@ using WHYB.DAL.Repositories;
 
 namespace WHYB.Infrastructure.AutofacModules
 {
-    public class UserServicesModule : Module
+    public class ServicesModule : Module
     {
 
         protected override void Load(ContainerBuilder builder)

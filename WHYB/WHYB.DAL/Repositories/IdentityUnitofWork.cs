@@ -11,25 +11,11 @@ namespace WHYB.DAL.Repositories
     public class IdentityUnitOfWork : IUnitOfWork
     {
         private readonly IdentityDbContext<ApplicationUser> _db;
-        private readonly IRepository<ClientProfile> _clientProfileRepository;
-
-        private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public IdentityUnitOfWork(string connectionString)
-        {
-            _db = new IdentityDbContext<ApplicationUser>(connectionString);
+       
+        public IdentityUnitOfWork(IdentityDbContext<ApplicationUser> identityDbContext)
+         {
+            _db = identityDbContext;
         }
-        
-        public IRepository<ClientProfile> ClientProfileRepository =>
-            _clientProfileRepository ?? new Repository<ClientProfile>(_db);
-
-        public UserManager<ApplicationUser> UserManager => _userManager ??
-                                                        new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_db));
-        
-        public RoleManager<ApplicationRole> RoleManager => _roleManager ??
-                                                        new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(_db));
-        
 
         public Task SaveAsync()
         {

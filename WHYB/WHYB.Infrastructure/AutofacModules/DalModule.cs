@@ -20,18 +20,26 @@ namespace WHYB.Infrastructure.AutofacModules
 
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<WhybDbContext>()
+                .As<IdentityDbContext<ApplicationUser>>()
+                .WithParameter("connectionString", _connectionString)
+                .InstancePerRequest();
+            
             builder.RegisterType<ApplicationRoleManager>()
-                .As<RoleManager<ApplicationRole>>();
-
+                .As<RoleManager<ApplicationRole>>()
+                .WithParameter("store", new RoleStore<ApplicationRole>(new IdentityDbContext<ApplicationUser>()))
+                .InstancePerRequest();
+            
             builder.RegisterType<ApplicationUserManager>()
-                .As<UserManager<ApplicationUser>>();
+                .As<UserManager<ApplicationUser>>()
+                .WithParameter("store", new UserStore<ApplicationUser>(new IdentityDbContext<ApplicationUser>()))
+                .InstancePerRequest();
 
             builder.RegisterGeneric(typeof(Repository<>))
                 .As(typeof(IRepository<>));
 
-            builder.RegisterType<WhybDbContext>()
-                .As<IdentityDbContext<ApplicationUser>>()
-                .WithParameter("connectionString", _connectionString)
+            builder.RegisterType<IdentityUnitOfWork>()
+                .As<IUnitOfWork>()
                 .InstancePerRequest();
 
             base.Load(builder);
