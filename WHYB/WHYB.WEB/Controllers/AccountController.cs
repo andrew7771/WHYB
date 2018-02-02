@@ -17,12 +17,10 @@ namespace WHYB.WEB.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IAuthenticationManager _authenticationManager;
 
-        public AccountController(IUserService userService, IAuthenticationManager authenticationManager)
+        public AccountController(IUserService userService)
         {
             _userService = userService;
-            _authenticationManager = authenticationManager;
         }
         
         
@@ -35,7 +33,7 @@ namespace WHYB.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginModel model)
         {
-            await SetInitialDataAsync();
+           // await SetInitialDataAsync();
 
             if (ModelState.IsValid)
             {
@@ -48,8 +46,8 @@ namespace WHYB.WEB.Controllers
                 }
                 else
                 {
-                    _authenticationManager.SignOut();
-                    _authenticationManager.SignIn(new AuthenticationProperties
+                    _userService.AuthenticationManager.SignOut();
+                    _userService.AuthenticationManager.SignIn(new AuthenticationProperties
                     {
                         IsPersistent = true
                     }, claim);
@@ -63,7 +61,7 @@ namespace WHYB.WEB.Controllers
 
         public ActionResult Logoff()
         {
-            _authenticationManager.SignOut();
+            _userService.AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
@@ -76,7 +74,7 @@ namespace WHYB.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-            await SetInitialDataAsync();
+           // await SetInitialDataAsync();
 
             if (ModelState.IsValid)
             {

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using WHYB.BLL.DTO;
 using WHYB.BLL.Infrastructure;
 using WHYB.BLL.Interfaces;
@@ -16,17 +19,43 @@ namespace WHYB.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _database;
+        //private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IRepository<ClientProfile> _clientProfileRepository;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
-        public UserService(IUnitOfWork uow, IRepository<ClientProfile> clientProfileRepository, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+        private readonly SignInManager<ApplicationUser, string> _signInManager;
+        private readonly IAuthenticationManager _authenticationManager;
+
+        public UserService(IUnitOfWork uow,
+            IRepository<ClientProfile> clientProfileRepository,
+            UserManager<ApplicationUser> userManager,
+            //RoleManager<ApplicationRole> roleManager, 
+            SignInManager<ApplicationUser, string> signInManager,
+            IAuthenticationManager authenticationManager 
+            )
         {
             _database = uow;
             _clientProfileRepository = clientProfileRepository;
             _userManager = userManager;
-            _roleManager = roleManager;
+             //_roleManager = roleManager;
+            _signInManager = signInManager;
+            _authenticationManager = authenticationManager;
         }
 
+        //public UserService(
+        //    IRepository<ClientProfile> clientProfileRepository,
+        //    UserManager<ApplicationUser> userManager,
+        //    SignInManager<ApplicationUser, string> signInManager,
+        //    IAuthenticationManager authenticationManager, IdentityDbContext<ApplicationUser> db)
+        //{
+        //    _db = db;
+        //    _clientProfileRepository = clientProfileRepository;
+        //    _userManager = userManager;
+        //    _signInManager = signInManager;
+        //    _authenticationManager = authenticationManager;
+        //}
+
+        public SignInManager<ApplicationUser, string> SignInManager => _signInManager;
+        public IAuthenticationManager AuthenticationManager => _authenticationManager;
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(userDto.Email);
@@ -67,27 +96,17 @@ namespace WHYB.BLL.Services
             return claim;
         }
 
-
-        public static Type get()
-        {
-            return typeof(ApplicationUserManager);
-        }
-        public static Type get1()
-        {
-            return typeof(ApplicationUser);
-        }
-
         public async Task SetInitialData(UserDTO adminDto, List<string> roles)
         {
-            foreach (string roleName in roles)
-            {
-                var role = await _roleManager.FindByNameAsync(roleName);
-                if (role == null)
-                {
-                    role = new ApplicationRole { Name = roleName };
-                    await _roleManager.CreateAsync(role);
-                }
-            }
+            //foreach (string roleName in roles)
+            //{
+            //    var role =  await _roleManager.FindByNameAsync(roleName);
+            //    if (role == null)
+            //    {
+            //        role = new ApplicationRole { Name = roleName };
+            //        await _roleManager.CreateAsync(role);
+            //    }
+            //}
             await Create(adminDto);
         }
         public void Dispose()
