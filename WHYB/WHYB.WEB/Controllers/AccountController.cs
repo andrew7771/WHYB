@@ -17,16 +17,15 @@ namespace WHYB.WEB.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAuthenticationManager _authenticationManager;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IAuthenticationManager authenticationManager)
         {
             _userService = userService;
+            _authenticationManager = authenticationManager;
         }
-
-        //private IUserService UserService => _userService;
-
-        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
-
+        
+        
         public ActionResult Login()
         {
             return View();
@@ -49,8 +48,8 @@ namespace WHYB.WEB.Controllers
                 }
                 else
                 {
-                    AuthenticationManager.SignOut();
-                    AuthenticationManager.SignIn(new AuthenticationProperties
+                    _authenticationManager.SignOut();
+                    _authenticationManager.SignIn(new AuthenticationProperties
                     {
                         IsPersistent = true
                     }, claim);
@@ -64,7 +63,7 @@ namespace WHYB.WEB.Controllers
 
         public ActionResult Logoff()
         {
-            AuthenticationManager.SignOut();
+            _authenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
 

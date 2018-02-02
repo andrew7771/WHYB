@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using WHYB.DAL.Entities;
-using WHYB.DAL.Identity;
 
 namespace WHYB.DAL.Interfaces
 {
