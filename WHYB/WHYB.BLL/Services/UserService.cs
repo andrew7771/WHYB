@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WHYB.BLL.DTO;
 using WHYB.BLL.Infrastructure;
 using WHYB.BLL.Interfaces;
 using WHYB.DAL.Entities;
-using WHYB.DAL.Identity;
+
 using WHYB.DAL.Interfaces;
 
 namespace WHYB.BLL.Services
@@ -19,40 +17,28 @@ namespace WHYB.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _database;
-        //private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IRepository<ClientProfile> _clientProfileRepository;
+       // private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser, string> _signInManager;
         private readonly IAuthenticationManager _authenticationManager;
 
-        public UserService(IUnitOfWork uow,
+        public UserService(
+            //RoleManager<ApplicationRole> roleManager, 
+            IUnitOfWork uow,
             IRepository<ClientProfile> clientProfileRepository,
             UserManager<ApplicationUser> userManager,
-            //RoleManager<ApplicationRole> roleManager, 
             SignInManager<ApplicationUser, string> signInManager,
             IAuthenticationManager authenticationManager 
             )
         {
+           // _roleManager = roleManager;
             _database = uow;
             _clientProfileRepository = clientProfileRepository;
             _userManager = userManager;
-             //_roleManager = roleManager;
             _signInManager = signInManager;
             _authenticationManager = authenticationManager;
         }
-
-        //public UserService(
-        //    IRepository<ClientProfile> clientProfileRepository,
-        //    UserManager<ApplicationUser> userManager,
-        //    SignInManager<ApplicationUser, string> signInManager,
-        //    IAuthenticationManager authenticationManager, IdentityDbContext<ApplicationUser> db)
-        //{
-        //    _db = db;
-        //    _clientProfileRepository = clientProfileRepository;
-        //    _userManager = userManager;
-        //    _signInManager = signInManager;
-        //    _authenticationManager = authenticationManager;
-        //}
 
         public SignInManager<ApplicationUser, string> SignInManager => _signInManager;
         public IAuthenticationManager AuthenticationManager => _authenticationManager;
@@ -71,7 +57,7 @@ namespace WHYB.BLL.Services
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 }
 
-                await _userManager.AddToRoleAsync(user.Id, userDto.Role);
+               // await _userManager.AddToRoleAsync(user.Id, userDto.Role);
                 ClientProfile clientProfile = new ClientProfile { Id = user.Id, Address = userDto.Address, Name = userDto.Name };
 
                 _clientProfileRepository.Create(clientProfile);
@@ -100,7 +86,7 @@ namespace WHYB.BLL.Services
         {
             //foreach (string roleName in roles)
             //{
-            //    var role =  await _roleManager.FindByNameAsync(roleName);
+            //    var role = await _roleManager.FindByNameAsync(roleName);
             //    if (role == null)
             //    {
             //        role = new ApplicationRole { Name = roleName };
@@ -109,9 +95,35 @@ namespace WHYB.BLL.Services
             //}
             await Create(adminDto);
         }
+        
         public void Dispose()
         {
             _database.Dispose();
         }
+
+
+        //public static DbContext GetDbContextFromEntity(object entity)
+        //{
+        //    var object_context = GetObjectContextFromEntity(entity);
+
+        //    if (object_context == null)
+        //        return null;
+
+        //    return new DbContext(object_context, dbContextOwnsObjectContext: false);
+        //}
+
+        //private static ObjectContext GetObjectContextFromEntity(object entity)
+        //{
+        //    var field = entity.GetType().GetField("_entityWrapper");
+
+        //    if (field == null)
+        //        return null;
+
+        //    var wrapper = field.GetValue(entity);
+        //    var property = wrapper.GetType().GetProperty("Context");
+        //    var context = (ObjectContext)property.GetValue(wrapper, null);
+
+        //    return context;
+        //}
     }
 }

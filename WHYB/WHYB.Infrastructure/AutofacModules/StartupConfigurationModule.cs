@@ -28,30 +28,26 @@ namespace WHYB.Infrastructure.AutofacModules
             _connectionString = connectionString;
         }
 
-        
         public void RegisterComponents(ContainerBuilder builder, IAppBuilder app)
         {
-            builder.RegisterType<WhybDbContext>()
-                .As<IdentityDbContext<ApplicationUser>>()
-                .WithParameter("connectionString", _connectionString)
-                .InstancePerRequest();
-
-            //builder.RegisterType<ApplicationRoleManager>()
-            //    .As<RoleManager<ApplicationRole>>()
-            //    .WithParameter("store", new RoleStore<ApplicationRole>(new IdentityDbContext<ApplicationUser>()))
-            //    .InstancePerRequest();
-            
-            builder.RegisterType<ApplicationUserManager>().As<UserManager<ApplicationUser>>().WithParameter("store", new UserStore<ApplicationUser>(new IdentityDbContext<ApplicationUser>())).InstancePerRequest();
+            builder.RegisterType<WhybDbContext>().As<DbContext>().WithParameter("connectionString", _connectionString).InstancePerRequest();
 
             builder.RegisterType<ApplicationSignInManager>().As<SignInManager<ApplicationUser, string>>().InstancePerRequest();
+
+            //builder.RegisterType<RoleStore<IdentityRole>>().As<IRoleStore<IdentityRole, string>>().InstancePerRequest();
+
             builder.RegisterType<UserStore<ApplicationUser>>().As<IUserStore<ApplicationUser>>().InstancePerRequest();
-            builder.RegisterType<IdentityUnitOfWork>().As<IUnitOfWork>().InstancePerRequest();
-            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerRequest();
             builder.Register<IAuthenticationManager>((c, p) => c.Resolve<IOwinContext>().Authentication).InstancePerRequest();
+
 
             var dataProtectionProvider = app.GetDataProtectionProvider();
             builder.Register<UserManager<ApplicationUser>>((c, p) => BuildUserManager(c, p, dataProtectionProvider));
+
+            builder.RegisterType<IdentityUnitOfWork>().As<IUnitOfWork>().InstancePerRequest();
+            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerRequest();
         }
+
+        
 
         private UserManager<ApplicationUser> BuildUserManager(IComponentContext context, IEnumerable<Parameter> parameters, IDataProtectionProvider dataProtectionProvider)
         {
@@ -100,3 +96,22 @@ namespace WHYB.Infrastructure.AutofacModules
         }
     }
 }
+
+
+/* builder.RegisterType<ApplicationSignInManager>()
+               .As<SignInManager<ApplicationUser, string>>()
+               .InstancePerRequest();
+
+           builder.RegisterType<UserStore<ApplicationUser>>()
+               .As<IUserStore<ApplicationUser>>()
+               .InstancePerRequest();
+
+           builder.RegisterType<ApplicationRoleManager>()
+               .As<RoleManager<ApplicationRole>>()
+               .WithParameter("store", new RoleStore<ApplicationRole>(new IdentityDbContext<ApplicationUser>()))
+               .InstancePerRequest();
+           builder.RegisterType<ApplicationUserManager>()
+               .As<UserManager<ApplicationUser>>()
+               .WithParameter("store", new UserStore<ApplicationUser>(new IdentityDbContext<ApplicationUser>()))
+               .InstancePerRequest();
+               */

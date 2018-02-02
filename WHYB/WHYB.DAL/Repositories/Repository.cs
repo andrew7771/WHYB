@@ -8,10 +8,11 @@ namespace WHYB.DAL.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : DbEntity
     {
-        private readonly IdentityDbContext<ApplicationUser> _identityDbContext;
+        //private readonly IdentityDbContext<ApplicationUser> _identityDbContext;
+        private readonly DbContext _identityDbContext;
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository(IdentityDbContext<ApplicationUser> context)
+        public Repository(DbContext context)
         {
             _identityDbContext = context;
             _dbSet = _identityDbContext.Set<TEntity>();
@@ -20,12 +21,9 @@ namespace WHYB.DAL.Repositories
         public void Create(TEntity item)
         {
             _dbSet.Add(item);
-            _identityDbContext.SaveChanges();
+            //_identityDbContext.SaveChanges();
         }
 
-        public void Dispose()
-        {
-            _identityDbContext.Dispose();
-        }
+       
     }
 }

@@ -33,7 +33,7 @@ namespace WHYB.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginModel model)
         {
-           // await SetInitialDataAsync();
+            await SetInitialDataAsync();
 
             if (ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace WHYB.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-           // await SetInitialDataAsync();
+            await SetInitialDataAsync();
 
             if (ModelState.IsValid)
             {
