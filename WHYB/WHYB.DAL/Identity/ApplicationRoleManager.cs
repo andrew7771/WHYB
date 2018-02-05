@@ -4,11 +4,11 @@ using WHYB.DAL.Entities;
 
 namespace WHYB.DAL.Identity
 {
-    //public class ApplicationRoleManager : RoleManager<IdentityRole>
-    //{
-    //    public ApplicationRoleManager(IRoleStore<IdentityRole, string> roleStore)
-    //        : base(roleStore)
-    //    {
-    //    }
-    //}
+    public class ApplicationRoleManager : RoleManager<IdentityRole>
+    {
+        public ApplicationRoleManager(IRoleStore<IdentityRole, string> roleStore)
+            : base(roleStore)
+        {
+        }
+    }
 }

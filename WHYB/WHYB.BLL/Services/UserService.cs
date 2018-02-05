@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WHYB.BLL.DTO;
@@ -18,13 +19,13 @@ namespace WHYB.BLL.Services
     {
         private readonly IUnitOfWork _database;
         private readonly IRepository<ClientProfile> _clientProfileRepository;
-       // private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser, string> _signInManager;
         private readonly IAuthenticationManager _authenticationManager;
 
         public UserService(
-            //RoleManager<ApplicationRole> roleManager, 
+            RoleManager<IdentityRole> roleManager, 
             IUnitOfWork uow,
             IRepository<ClientProfile> clientProfileRepository,
             UserManager<ApplicationUser> userManager,
@@ -32,7 +33,7 @@ namespace WHYB.BLL.Services
             IAuthenticationManager authenticationManager 
             )
         {
-           // _roleManager = roleManager;
+            _roleManager = roleManager;
             _database = uow;
             _clientProfileRepository = clientProfileRepository;
             _userManager = userManager;
@@ -84,15 +85,15 @@ namespace WHYB.BLL.Services
 
         public async Task SetInitialData(UserDTO adminDto, List<string> roles)
         {
-            //foreach (string roleName in roles)
-            //{
-            //    var role = await _roleManager.FindByNameAsync(roleName);
-            //    if (role == null)
-            //    {
-            //        role = new ApplicationRole { Name = roleName };
-            //        await _roleManager.CreateAsync(role);
-            //    }
-            //}
+            foreach (string roleName in roles)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+                if (role == null)
+                {
+                    role = new IdentityRole { Name = roleName };
+                    await _roleManager.CreateAsync(role);
+                }
+            }
             await Create(adminDto);
         }
         
@@ -100,30 +101,5 @@ namespace WHYB.BLL.Services
         {
             _database.Dispose();
         }
-
-
-        //public static DbContext GetDbContextFromEntity(object entity)
-        //{
-        //    var object_context = GetObjectContextFromEntity(entity);
-
-        //    if (object_context == null)
-        //        return null;
-
-        //    return new DbContext(object_context, dbContextOwnsObjectContext: false);
-        //}
-
-        //private static ObjectContext GetObjectContextFromEntity(object entity)
-        //{
-        //    var field = entity.GetType().GetField("_entityWrapper");
-
-        //    if (field == null)
-        //        return null;
-
-        //    var wrapper = field.GetValue(entity);
-        //    var property = wrapper.GetType().GetProperty("Context");
-        //    var context = (ObjectContext)property.GetValue(wrapper, null);
-
-        //    return context;
-        //}
     }
 }

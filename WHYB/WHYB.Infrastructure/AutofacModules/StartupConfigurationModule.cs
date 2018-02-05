@@ -34,12 +34,12 @@ namespace WHYB.Infrastructure.AutofacModules
 
             builder.RegisterType<ApplicationSignInManager>().As<SignInManager<ApplicationUser, string>>().InstancePerRequest();
 
-            //builder.RegisterType<RoleStore<IdentityRole>>().As<IRoleStore<IdentityRole, string>>().InstancePerRequest();
+            builder.RegisterType<RoleStore<IdentityRole>>().As<IRoleStore<IdentityRole, string>>();
+            builder.RegisterType<ApplicationRoleManager>().As<RoleManager<IdentityRole>>().InstancePerRequest();
 
             builder.RegisterType<UserStore<ApplicationUser>>().As<IUserStore<ApplicationUser>>().InstancePerRequest();
             builder.Register<IAuthenticationManager>((c, p) => c.Resolve<IOwinContext>().Authentication).InstancePerRequest();
-
-
+            
             var dataProtectionProvider = app.GetDataProtectionProvider();
             builder.Register<UserManager<ApplicationUser>>((c, p) => BuildUserManager(c, p, dataProtectionProvider));
 
