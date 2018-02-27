@@ -96,22 +96,3 @@ namespace WHYB.Infrastructure.AutofacModules
         }
     }
 }
-
-
-/* builder.RegisterType<ApplicationSignInManager>()
-               .As<SignInManager<ApplicationUser, string>>()
-               .InstancePerRequest();
-
-           builder.RegisterType<UserStore<ApplicationUser>>()
-               .As<IUserStore<ApplicationUser>>()
-               .InstancePerRequest();
-
-           builder.RegisterType<ApplicationRoleManager>()
-               .As<RoleManager<ApplicationRole>>()
-               .WithParameter("store", new RoleStore<ApplicationRole>(new IdentityDbContext<ApplicationUser>()))
-               .InstancePerRequest();
-           builder.RegisterType<ApplicationUserManager>()
-               .As<UserManager<ApplicationUser>>()
-               .WithParameter("store", new UserStore<ApplicationUser>(new IdentityDbContext<ApplicationUser>()))
-               .InstancePerRequest();
-               */
