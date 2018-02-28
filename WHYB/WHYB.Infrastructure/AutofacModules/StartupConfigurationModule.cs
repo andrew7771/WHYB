@@ -11,6 +11,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
+using WHYB.BLL.Services;
 using WHYB.DAL.Context;
 using WHYB.DAL.Entities;
 using WHYB.DAL.Identity;
@@ -86,7 +87,7 @@ namespace WHYB.Infrastructure.AutofacModules
                 BodyFormat = "Your security code is {0}"
             });
 
-            //manager.EmailService = new EmailService();
+            manager.EmailService = new EmailService();
             //manager.SmsService = new SmsService();
             if (dataProtectionProvider != null)
             {

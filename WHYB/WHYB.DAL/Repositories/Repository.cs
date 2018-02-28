@@ -8,7 +8,6 @@ namespace WHYB.DAL.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : DbEntity
     {
-        //private readonly IdentityDbContext<ApplicationUser> _identityDbContext;
         private readonly DbContext _identityDbContext;
         private readonly DbSet<TEntity> _dbSet;
 
@@ -21,7 +20,6 @@ namespace WHYB.DAL.Repositories
         public void Create(TEntity item)
         {
             _dbSet.Add(item);
-            //_identityDbContext.SaveChanges();
         }
 
        

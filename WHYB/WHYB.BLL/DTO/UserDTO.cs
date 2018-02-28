@@ -16,4 +16,9 @@ namespace WHYB.BLL.DTO
         public string Address { get; set; }
         public string Role { get; set; }
     }
+
+    public class EmailConfirmedDTO
+    {
+        public bool EmailConfirmed { get; }
+    }
 }

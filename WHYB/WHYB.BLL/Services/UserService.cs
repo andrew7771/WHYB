@@ -41,8 +41,12 @@ namespace WHYB.BLL.Services
             _authenticationManager = authenticationManager;
         }
 
+        public UserManager<ApplicationUser> UserManager => _userManager;
+        public RoleManager<IdentityRole> RoleManager => _roleManager;
         public SignInManager<ApplicationUser, string> SignInManager => _signInManager;
         public IAuthenticationManager AuthenticationManager => _authenticationManager;
+        
+
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(userDto.Email);
@@ -50,7 +54,6 @@ namespace WHYB.BLL.Services
             if (user == null)
             {
                 user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
-
                 var result = await _userManager.CreateAsync(user, userDto.Password);
 
                 if (!result.Succeeded)
@@ -58,7 +61,7 @@ namespace WHYB.BLL.Services
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
                 }
 
-               // await _userManager.AddToRoleAsync(user.Id, userDto.Role);
+                await _userManager.AddToRoleAsync(user.Id, userDto.Role);
                 ClientProfile clientProfile = new ClientProfile { Id = user.Id, Address = userDto.Address, Name = userDto.Name };
 
                 _clientProfileRepository.Create(clientProfile);
@@ -72,15 +75,47 @@ namespace WHYB.BLL.Services
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
-
             ApplicationUser user = await _userManager.FindAsync(userDto.Email, userDto.Password);
 
             if (user != null)
             {
-                claim =
-                    await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                claim = await _userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             }
             return claim;
+        }
+
+        public async Task<string> FindUserIdByEmailAsync(string email)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+            return user.Id;
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
+        {
+            return await UserManager.GenerateEmailConfirmationTokenAsync(userId);
+        }
+
+        public async Task SendEmailasync(string userId, string subject, string body)
+        {
+            await _userManager.SendEmailAsync(userId, subject, body);
+        }
+
+        public async Task<bool> EmailConfirmed(string email)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+
+            return user.EmailConfirmed;
+        }
+
+        public async Task<OperationDetails> ConfirmEmailAsync(string userId, string code)
+        {
+            var result = await _userManager.ConfirmEmailAsync(userId, code);
+
+            if (result.Succeeded)
+            {
+                return new OperationDetails(true, "Письмо с подтверджением почты выслано на e-mail", "E-mail");
+            }
+            return new OperationDetails(false, result.Errors.FirstOrDefault(), "Email");
         }
 
         public async Task SetInitialData(UserDTO adminDto, List<string> roles)

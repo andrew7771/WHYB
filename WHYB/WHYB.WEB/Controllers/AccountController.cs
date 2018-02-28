@@ -33,9 +33,7 @@ namespace WHYB.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginModel model)
         {
-            await SetInitialDataAsync();
-
-            if (ModelState.IsValid)
+           if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = await _userService.Authenticate(userDto);
@@ -74,9 +72,7 @@ namespace WHYB.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-            await SetInitialDataAsync();
-
-            if (ModelState.IsValid)
+          if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO
                 {
@@ -87,18 +83,54 @@ namespace WHYB.WEB.Controllers
                     Role = "user"
                 };
                 OperationDetails operationDetails = await _userService.Create(userDto);
+                
                 if (operationDetails.Succedeed)
                 {
-                    return View("SuccessRegister");
+                    ClaimsIdentity claim = await _userService.Authenticate(userDto);
+                    if (claim != null)
+                    {
+                        _userService.AuthenticationManager.SignOut();
+                        _userService.AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true}, claim);
+
+                        string userId =  await _userService.FindUserIdByEmailAsync(userDto.Email);
+
+                        return RedirectToAction("CompleteRegistration", "Account", new {userid = userId});
+                    }
+
+                    return View("Error");
                 }
-                else
-                {
-                    ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
-                }
+                ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
             return View(model);
         }
 
+
+        public async Task<ActionResult> CompleteRegistration(string userId)
+        {
+            string code = await _userService.GenerateEmailConfirmationTokenAsync(userId);
+
+            if (Request.Url != null)
+            {
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new {userId = userId, code = code}, protocol: Request.Url.Scheme);
+
+                await _userService.SendEmailasync(userId, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            }
+            return View();
+        }
+
+        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var result = await _userService.ConfirmEmailAsync(userId, code);
+            if (result.Succedeed)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View("Error");
+        }
 
         private async Task SetInitialDataAsync()
         {

@@ -10,7 +10,7 @@ namespace WHYB.DAL.Context
         public WhybDbContext(string connectionString)
             : base(connectionString)
         {
-            Database.SetInitializer(new WhybDBInitializer());
+           // Database.SetInitializer(new WhybDBInitializer());
         }
 
         public DbSet<ClientProfile> ClientProfiles { get; set; }

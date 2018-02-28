@@ -8,13 +8,8 @@ namespace WHYB.DAL.Repositories
 {
     public class IdentityUnitOfWork : IUnitOfWork
     {
-        //private readonly IdentityDbContext<ApplicationUser> _db;
-        private readonly DbContext _db;
+       private readonly DbContext _db;
 
-        //public IdentityUnitOfWork(IdentityDbContext<ApplicationUser> identityDbContext)
-        //{
-        //    _db = identityDbContext;
-        //}
         public IdentityUnitOfWork(DbContext identityDbContext)
         {
             _db = identityDbContext;
