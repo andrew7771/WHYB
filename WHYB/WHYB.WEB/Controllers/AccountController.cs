@@ -74,6 +74,7 @@ namespace WHYB.WEB.Controllers
         {
           if (ModelState.IsValid)
             {
+                //await SetInitialDataAsync();
                 UserDTO userDto = new UserDTO
                 {
                     Email = model.Email,
